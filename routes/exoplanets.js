@@ -86,19 +86,29 @@ router.get('/details', function (req, res, next) {
 
 router.get('/filter', function (req, res, next) {
     const filter = req.query.filter;
-    let exoplanetsTableFilter = [];
-    if (filter === "Filtrer par hclass") {
-        console.log("GET FILTER EXOPLANET HCLASS");
-        exoplanetsTableFilter = Exoplanet.searchByHclass(req.query.hClassExoplanet);
-    }
-    if (filter === "Filtrer par année") {
-        console.log("GET FILTER EXOPLANET ANNEE");
-        const discoveryYearParam = parseInt(req.query.discoveryYearExoplanet);
-        exoplanetsTableFilter = Exoplanet.searchByYear(discoveryYearParam);
-    }
+    let exoplanetsTableFilter = exoplanetsFilter(filter);
+    if(exoplanetsTableFilter.length == 0 || exoplanetsTableFilter == null)
+        return res.render('/error.hbs');
+    
     // param exoplanetsTable must be the same but with a different value (table filtering)
     res.render('exoplanets/index.hbs', { exoplanetsTable: exoplanetsTableFilter });
 });
+
+function exoplanetsFilter(filter) {
+    
+    if (filter === "Filtrer par hclass") {
+        console.log("GET FILTER EXOPLANET HCLASS");
+        return Exoplanet.searchByHclass(req.query.hClassExoplanet);
+    }
+
+    if (filter === "Filtrer par année") {
+        console.log("GET FILTER EXOPLANET ANNEE");
+        const discoveryYearParam = parseInt(req.query.discoveryYearExoplanet);
+        return Exoplanet.searchByYear(discoveryYearParam);
+    }
+
+    return null;
+};
 
 
 // display form to update exoplanet
