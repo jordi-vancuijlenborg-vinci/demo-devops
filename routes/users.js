@@ -73,12 +73,16 @@ router.post('/add', (req, res, next) => {
 module.exports = router;
 
 function handleAccountStatus(userFound, req, res) {
-    if (userFound.active == false) {
-        req.session.errors = "Compte désactivé";
-        res.redirect('/users');
-    }
-    else {
-        handleLogin(req, userFound, res);
+    handleAccountStatus();
+
+    function handleAccountStatus() {
+        if (userFound.active == false) {
+            req.session.errors = "Compte désactivé";
+            res.redirect('/users');
+        }
+        else {
+            handleLogin(req, userFound, res);
+        }
     }
 }
 
